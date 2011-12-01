@@ -1,0 +1,364 @@
+<html>
+  <head>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="">
+	<meta name="author" content="Kloudgis.org">
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/sandbox.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/note.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/feature_info.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/inspector.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/search.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/notification.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="css/common.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="ext/leaflet/leaflet.css" type="text/css" media="screen" />
+    <title>Kloudgis</title>
+	<!-- popup for Multiple NOTES -->
+	<script type="text/x-handlebars" data-template-name="notes-marker-popup">
+		{{#view class="multiple-notes-title"}}
+			{{KG.notesPopupController.popupTitle}}
+		{{/view}}
+	    {{#collection contentBinding="KG.notesPopupController" tagName="ul" class="multiple-notes-list no-style-list"}}			
+			{{#view KG.NotePopupItemView class="multiple-notes-item"}}
+				<table class="multiple-notes-table">
+				<td>
+				{{#view class="multiple-notes-item-title"}}
+					{{itemView.content.title}}
+				{{/view}}
+				</td>
+				<td>
+				{{#view class="note-author-label"}}
+					{{itemView.content.authorFormatted}}
+				{{/view}}
+				</td>
+				</table>
+			{{/view}}
+		{{/collection}}
+	</script>
+		<!-- popup for EDIT a NOTE -->
+	<script type="text/x-handlebars" data-template-name="active-note-popup">
+		{{#view class="active-note-popup"}}	
+			{{#view KG.Button class="note-zoom-button" isVisibleBinding="KG.activeNoteController.isOldRecord" tagName="div" sc_action="zoomNoteAction"}}
+				<a href="javascript:void(0)">zoom</a>
+			{{/view}}	
+			{{#view class="note-date-label"}}
+				{{KG.activeNoteController.content.formattedDate}}
+			{{/view}}			
+			{{KG.activeNoteController.titleLabel}}
+	    	{{#view KG.TextField valueBinding="KG.activeNoteController.titleValue" disabledBinding="KG.activeNoteController.isDisabled" type="text" placeholder_not_loc="_noteTitlePlaceholder" }}
+			{{/view}}
+			{{KG.activeNoteController.descriptionLabel}}
+			{{#view KG.TextArea id="note-description-area" disabledBinding="KG.activeNoteController.isDisabled" valueBinding="KG.activeNoteController*content.description"}}
+			{{/view}}
+			{{#view class="active-note-popup-bottom"}}
+				{{#view KG.Button isVisibleBinding="KG.activeNoteController.isUpdateVisible" class="white-button" classBinding="isActive" sc_action="confirmNoteAction"}}
+					{{KG.activeNoteController.confirmLabel}}
+				{{/view}}		
+				{{#view KG.Button isVisibleBinding="KG.activeNoteController.isDeleteVisible" class="red-button" classBinding="isActive" sc_action="deleteNoteAction"}}
+					{{KG.activeNoteController.deleteLabel}}
+				{{/view}}
+				{{#view class="note-author-label"}}
+					{{KG.activeNoteController.content.authorFormatted}}
+				{{/view}}
+			{{/view}}
+			{{#view KG.Button class="comment-button" isVisibleBinding="KG.activeCommentsController.hideButtonVisible" classBinding="isActive" sc_action="showCommentsAction"}}
+				<a href="javascript:void(0)">
+					{{KG.activeNoteController.commentsLabel}}
+				</a>
+			{{/view}}
+			{{#view KG.Button class="comment-button" isVisibleBinding="KG.activeCommentsController.showButtonVisible" classBinding="isActive" sc_action="hideCommentsAction"}}
+				<a href="javascript:void(0)">
+					{{KG.activeNoteController.hideCommentsLabel}}
+				</a>
+			{{/view}}
+			{{#view class="note-comments-container" classBinding="KG.activeCommentsController.showing"}}
+				{{#collection contentBinding="KG.activeCommentsController.content" tagName="ul" class="popup-comment-list no-style-list"}}
+					{{#view KG.Button tagName="div" sc_action="toggleDeleteCommentButtonAction"}}
+						<table style="width:100%">
+						<tr>
+						<td>
+						{{#view KG.AuthorView class="note-comment-author"}}
+							{{authorLabel}}																			
+						{{/view}}
+						{{#view class="note-comment-content"}}
+							{{itemView.content.value}}
+						{{/view}}
+						{{#view class="note-comment-date"}}
+							{{itemView.content.formattedDate}}
+						{{/view}}
+						</td>
+						<td style="text-align:right;vertical-align:middle">
+						{{#view KG.DeleteCommentView class="note-comment-delete red-button" sc_action="deleteCommentButtonAction"}}
+							{{label}}
+						{{/view}}
+						</td>
+						</tr>
+						</table>
+					{{/view}}
+				{{/collection}}			
+			{{/view}}
+			{{#view KG.CommentAreaView id="note-new-comment-area" isVisibleBinding="KG.activeCommentsController.showing" valueBinding="KG.newCommentController.content" placeholder_not_loc="_commentPlaceholder"}}
+			{{/view}}
+			{{#view KG.LoadingImageView id="note-comment-loading" isVisibleBinding="KG.activeCommentsController.isLoading"}}
+				<img {{bindAttr src="loadingImage"}} alt="Loading"/>
+		  	{{/view}}
+		{{/view}}
+	</script>
+		<!-- popup for Feature Info -->
+	<script type="text/x-handlebars" data-template-name="info-popup">
+		{{#collection contentBinding="KG.infoController"  isVisibleBinding="KG.infoController.listVisible" tagName="ul" class="popup-info-list no-style-list"}}
+			{{#view KG.FeatureInfoPopupItemView class="popup-info-item" ignoreIfFirst="true"}}
+					<table class="popup-info-table more-features-zone">
+					<tr>
+					<td>
+						{{#view class="label-ellipsis"}}
+							{{itemView.content.title}}
+						{{/view}}			
+					</td>
+					<td>
+						{{#view KG.Button sc_action="selectFeatureInspectorAction" class="popup-info-select" tagName="div" classBinding="isActive"}}	
+							<img src="resources/images/right_arrow_32.png"/>		
+						{{/view}}
+					</td>
+					</tr>
+					</table>
+			{{/view}}		
+		{{/collection}}
+		<table class="popup-info-master-row-table">
+		<tr>
+		<td>
+			{{#view KG.ExpandButtonView tagName="div" class="popup-info-expand" isVisibleBinding="KG.infoController.multipleFeatures" sclassBinding="isActive" expandedBinding="KG.infoController.listVisible"}}	
+				<img {{bindAttr src="logo"}}/>		
+			{{/view}}		
+		</td>
+		<td>
+		{{#view KG.FeatureInfoPopupItemView class="popup-info-item" contentBinding="KG.infoController.content.firstObject"}}
+			<table class="popup-info-table">
+			<tr>
+			<td>
+				{{#view class="label-ellipsis"}}
+					{{parentView.content.title}}
+				{{/view}}		
+			</td>
+			<td>
+				{{#view KG.Button sc_action="selectFeatureInspectorAction" class="popup-info-select" contentBinding="KG.infoController.content.firstObject" tagName="div" classBinding="isActive"}}	
+					<img src="resources/images/right_arrow_32.png"/>		
+				{{/view}}
+			</td>
+			</tr>
+			</table>
+		{{/view}}	
+		</td>
+		</tr>
+		</table>	
+	</script>
+	
+		<!-- Inspector renderers -->
+	<script type="text/x-handlebars" data-template-name="read-only-renderer">
+		<span class="inspector-attr-name">
+			{{itemView.content.name}}
+		</span>	
+
+		<div class="inspector-attr-value">
+			<span>
+				{{itemView.content.value}}
+			</span>
+		</div>
+	</script>
+	<script type="text/x-handlebars" data-template-name="text-renderer">
+		<span class="inspector-attr-name">
+			{{itemView.content.name}}
+		</span>	
+		<div class="inspector-attr-value">
+			{{#view KG.TextField valueBinding="itemView.content.value" spellcheck="false" autocorrect="off" autocapitalize="off"}}
+			{{/view}}
+		</div>
+	</script>
+	
+	<!-- send notification panel -->
+	<script type="text/x-handlebars" data-template-name="send-text-notification">
+		<div id="send-notification-panel">
+			{{KG.sendNotificationController.notificationLabel}}
+			{{view KG.Button class="x-button notification-close-button" classBinding="isActive" sc_action="closeSendNotificationAction" titleBinding="KG.sendNotificationController.closeLabel"}}
+			{{view KG.TextNotificationAreaView valueBinding="KG.sendNotificationController.content"}}
+			{{KG.sendNotificationController.feedbackMessage}}
+			{{#view KG.Button class="white-button send-notification-button" classBinding="isActive" sc_action="sendNotificationButtonAction"}}
+				{{KG.sendNotificationController.sendLabel}}
+			{{/view}}
+			{{view SC.Checkbox valueBinding="KG.sendNotificationController.sendOnEnterValue"}}
+			<img src="resources/images/return.png" {{bindAttr title="KG.sendNotificationController.sendOnEnterTooltip"}}/>
+			{{#view KG.LoadingImageView isVisibleBinding="KG.sendNotificationController.hasNotificationPending"}}
+				<img {{bindAttr src="loadingImage"}} alt="Loading"/>
+		  	{{/view}}		
+		</div>
+	</script>	
+  </head>
+<!-- *** BODY *** -->
+  <body>	
+	<div id="box">
+		<div id="left-side-panel">
+			<div class="inspector-panel">
+				<script type="text/x-handlebars">
+				{{#view KG.Button class="x-button inspector-close-button" classBinding="isActive" sc_action="closeInspectorAction" titleBinding="KG.inspectorController.closeLabel"}}
+				{{/view}}
+				{{#view class="inspector-title"}}
+					{{KG.inspectorController.title}}
+				{{/view}}
+		    	{{#collection contentBinding="KG.inspectorController" tagName="ul" class="inspector-attrs-list no-style-list"}}
+					{{#view KG.InspectorAttributeView class="inspector-list-item"}}
+					{{/view}}
+				{{/collection}}																		
+			</script>	
+			</div>
+		</div>
+		<div id="super-map">
+			<div id="map">		
+			</div>	
+			<span id="back-home" class="kg-controls clickable">
+				<a href="home.html"></a>
+			</span>			
+			<span id="create-note" class="kg-controls clickable">
+				<script type="text/x-handlebars">
+					{{#view  KG.Button tagName="div" titleBinding="KG.core_note.createNoteLabel" classBinding="isActive" sc_action="createNoteAction"}}
+						<img {{bindAttr src="KG.core_note.createNoteImg"}}/>
+					{{/view}}
+				</script>
+			</span>
+			<span id="active-sandbox-label">	
+				<span class="label-ellipsis"></span>
+			</span>
+			<!-- notification icon in the top area -->
+			<script type="text/x-handlebars">
+				{{#view id="notification-panel"}}
+					{{#view KG.NotificationButtonView id="notification-button" class="kg-controls clickable" tagName="span" sc_action="toggleNotificationPopupAction" classBinding="KG.notificationsController.activePopup"}}
+						{{#view class="capsule-label" isVisibleBinding="KG.notificationsController.hasNotification"}}
+							{{parentView.notificationCount}}
+						{{/view}}
+						<img {{bindAttr src="notificationImg"}}/>
+					{{/view}}
+					{{#view id="notification-popup" isVisibleBinding="KG.notificationsController.activePopup"}}
+						{{#view class="notification-label"}}
+						{{/view}}
+						<div>
+						{{view KG.Button id="notification-send-button" tagName="span" class="white-button"  sc_action="sendTextNotificationAction"}}
+						{{view KG.Button id="notification-clear-button" tagName="span" class="red-button" 
+						 isVisibleBinding="KG.notificationsController.hasNotification" sc_action="clearNotificationAction"}}						
+						</div>
+						{{#collection contentBinding="KG.notificationsController.content"}}					
+							{{#view KG.NotificationView class="notification-item"}}
+								{{#view class="notification-item-title"}}
+									<a {{bindAttr href="parentView.authorMailTo"}}> {{parentView.authorValue}}</a>{{parentView.titleValue}}{{parentView.dateValue}}
+								{{/view}}
+								{{#view class="notification-item-message"}}
+									{{{parentView.messageValue}}}
+								{{/view}}
+							{{/view}}
+							{{/collection}}
+					{{/view}}
+				{{/view}}
+			</script>
+			
+			<!-- search control in the bottom area -->
+			<script type="text/x-handlebars">			
+				{{#view class="kg-controls" id="search-control" tagName="span" classBinding="KG.searchController.hasResults"}}
+					{{#view KG.SearchField resultsBinding="KG.searchController.searchHistorySize" placeholder_not_loc="_search" valueBinding="KG.searchController.searchValue"}}
+					{{/view}}
+					{{#collection contentBinding="KG.searchController" isVisibleBinding="KG.searchController.hasResults" tagName="ul" class="search-cat-list no-style-list"}}
+						{{#view KG.Button class="search-cat-item" tagName="div" sc_action="selectSearchCategoryAction"}}
+							<table class="search-category-table">
+							<tr>
+							<td>
+							{{#view class="cat-title-label label-ellipsis" titleBinding="itemView.content.title"}}
+								{{itemView.content.title}}
+							{{/view}}
+							</td>
+							<td>
+							{{#view class="cat-size-label label-ellipsis capsule-label" tagName="span"}}
+								{{itemView.content.count}}
+							{{/view}}
+							</td>
+							</tr>
+							</table>
+						{{/view}}
+					{{/collection}}
+					{{#collection contentBinding="KG.core_search.plugins" isVisibleBinding="KG.core_search.searchAsked" tagName="ul" class="search-cat-list no-style-list"}}
+						{{#view KG.Button class="search-plugin-item" tagName="div" sc_action="selectSearchPluginAction"}}
+							{{#view class="plugin-title-label label-ellipsis" titleBinding="itemView.content.title"}}
+								{{itemView.content.title}}
+							{{/view}}
+						{{/view}}
+					{{/collection}}
+				{{/view}}
+			</script>
+			<script type="text/x-handlebars">
+				{{#view class="kg-controls" id="position-label" tagName="span"}}
+					{{KG.core_sandbox.latitudeLabel}}
+					{{KG.core_sandbox.longitudeLabel}}
+					{{/view}}
+			</script>
+		</div>
+	</div>	
+
+	<!-- search results in the middle of the screen -->
+	<script type="text/x-handlebars">
+		{{#view id="search-result" classBinding="KG.searchResultsController.listVisible"}}
+		{{#view class="search-title-area" }}
+			{{#view KG.Button class="x-button search-close-button" classBinding="isActive" sc_action="hideSearchResultAction" titleBinding="KG.searchResultsController.closeLabel"}}
+			{{/view}}
+			<div id="title-label">
+				{{KG.searchResultsController.listTitle}}
+			</div>
+		{{/view}}
+		{{#view class="search-list-area" classBinding="KG.searchResultsController.hasResults"}}
+			{{#collection contentBinding="KG.searchResultsController" tagName="ul" class="search-result-list no-style-list"}}
+				{{#view KG.Button class="search-list-item" tagName="div"}}
+					<table class="search-result-table">
+					<tr>
+						<td class="search-title-cell">
+							{{#view KG.SearchResultLabelView class="feature-title-label"}}
+								{{itemView.content.title}}
+							{{/view}}
+						</td>
+						<td class="search-select-cell">
+							{{#view KG.Button isVisibleBinding="itemView.content.isSelectable" class="search-select" tagName="div" classBinding="isActive" sc_action="selectFeatureInspectorAction"}}	
+								<img src="resources/images/right_arrow_32.png"/>		
+							{{/view}}
+						</td>
+						<td class="search-select-cell">
+							{{#view KG.Button isVisibleBinding="itemView.content.hasCreateNote" class="search-create-note" tagName="div" classBinding="isActive" sc_action="createNoteFromFeatureAction"}}	
+								<img src="resources/images/note_32.png"/>		
+							{{/view}}
+						</td>
+					</tr>
+					</table
+				{{/view}}
+			{{/collection}}
+		{{/view}}
+		{{/view}}
+	</script>
+  </body>
+
+<!-- load all of the dependencies --> 
+   <script type="text/javascript" src="assets/bpm_libs.js" ></script>
+   <script type="text/javascript" src="assets/app_lib.js" ></script> 
+   <script type="text/javascript" src="assets/auth_lib.js" ></script>
+   <script type="text/javascript" src="assets/core_lib.js" ></script>
+   <script type="text/javascript" src="assets/sandbox_lib.js" ></script>
+<!-- load my app external lib --> 
+   <script type="text/javascript" src="ext/leaflet/leaflet.js" ></script> 
+   <script type="text/javascript" src="ext/plugins/autoresize.jquery.js" ></script> 
+   <script type="text/javascript" src="ext/plugins/jquery.atmosphere.js" ></script> 
+   <script type="text/javascript"> 
+	      spade.ready(function() { 
+			//bootstrap
+	        spade.require('kloudgis/sandbox/lib/main');			
+	      }); 
+   </script>
+	
+</html>

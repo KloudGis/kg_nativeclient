@@ -1,0 +1,168 @@
+/*NOTES*/
+/* multiple notes list */
+
+.multiple-notes-title{
+	text-align: center;
+	font-size:14px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.multiple-notes-table{
+	width: 4cm;
+    padding:0px;
+	border: none;
+	border-spacing: 0px;
+}
+
+.multiple-notes-item{
+	padding: 0.5em;
+}
+
+.multiple-notes-item:hover{
+	background: rgba(0,0,255,0.5);
+	border-radius:1em;
+	color: white;
+}
+
+.multiple-notes-item:hover table{
+	color: white;
+}
+
+.multiple-notes-item:hover table .note-author-label{
+	color: white;
+}
+
+.multiple-notes-table td{
+	vertical-align:bottom;	
+}
+
+.multiple-notes-item-title{
+	font-size:12px;
+}
+
+/* note active */
+.note-author-label{
+	margin-top:3px;
+	font-size:10px;
+	display: block;	
+	text-align: right;
+	white-space: nowrap;
+	color: gray;
+}
+
+.active-note-popup .note-date-label{
+	font-size:10px;
+	font-style: italic;
+	float: right;
+	color:gray;	
+}
+
+.note-zoom-button{
+	text-align: center;
+}
+
+.active-note-popup > span{
+	display: block;
+	font-weight: bold;
+}
+
+.active-note-popup input{
+	width: 100%;
+}
+
+#note-description-area{	
+	height: 48px;
+	display: block;
+	width:100%;
+}
+
+
+.active-note-popup-bottom{
+	width: 220px;
+	text-align: center;
+	margin-top:5px;
+}
+
+.active-note-popup .red-button{
+	margin-left:10px;
+}
+
+
+.active-note-popup .comment-button{
+	background: none;
+	border: none;
+	margin-top:5px;
+}
+
+.popup-comment-list{
+	background: rgb(237,239,244);
+}
+
+.popup-comment-list li:hover{
+	background: rgb(207,209,214);
+}
+
+.popup-comment-list li{
+	margin-top:3px;
+	border-bottom: solid 1px white;
+}
+
+.popup-comment-list li:last-child{
+	border-bottom: none;
+}
+
+
+.note-comments-container{
+	padding-top: 5px;
+	max-height:0;
+	display: none;
+	overflow-y: auto;
+	transition:max-height 0.3s ease-out;
+	-webkit-transition:max-height 0.3s ease-out;
+	-moz-transition:max-height 0.3s ease-out;
+}
+
+.note-comments-container.showing{
+	display: block;
+	max-height:3cm;
+}
+
+.note-comment-author{
+	font-size:12px;
+	margin-right:5px;
+	font-weight: bold;
+	display:inline;
+}
+
+.note-comment-content{
+	display:inline;
+	font-size:12px;
+}
+
+.note-comment-date{
+	font-size:10px;
+	color:gray;
+	font-weight: 400;
+}
+
+#note-new-comment-area{
+	display: block;
+	width:100%;
+	height:28px;
+	margin-top:3px;
+}
+
+#note-comment-loading{
+	margin-top:3px;
+	width: 100%;
+	text-align: center;
+}
+
+.comment-item-table{
+	width:100%;
+}
+
+.note-comment-delete{
+	font-size: 12px;
+}

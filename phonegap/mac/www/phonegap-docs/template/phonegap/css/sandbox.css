@@ -1,0 +1,125 @@
+#box{
+	position:absolute;
+	left:0px;
+	top:0px;
+	right:0px;
+	bottom:0px;	
+}
+
+#box.mobile{
+		bottom:-60px;
+}
+
+#super-map {
+	height:100%;
+}
+
+#left-side-panel{
+	overflow: hidden;
+	height:100%;
+	width:auto;
+	max-width:0;
+	float: left;
+	background: url(../resources/images/fabric.png) repeat;
+	transition:max-width 0.6s ease-in;
+	-webkit-transition:max-width 0.6s ease-in;
+	-moz-transition:max-width 0.6s ease-in;
+}
+
+#left-side-panel.active{
+	max-width:40%;
+	overflow: auto;
+}
+
+#right-side-panel{
+	height:100%;
+	width:4cm;
+	float: right;
+}
+
+#map {
+	height:100%;
+	border: none;
+}
+
+.kg-controls{
+	font-size: 0.3cm;
+	z-index:9;
+	position: absolute;
+	text-align:center;
+	margin: 0.1cm;
+	padding: 0.35em 0.35em;
+	border-radius: 0.2cm;
+	background-color: rgba(0,0,0,0.25);	
+	font-weight: bold;
+}
+
+.kg-controls.clickable:hover{
+	background-color: rgba(0,0,0,0.40);	
+}
+
+.kg-controls a{
+	color:black;
+	padding: 0.5em 0.5em;
+	right:0px;
+	top:1cm;
+	text-shadow: 0px -1px 2px #fff;		
+}
+
+.kg-controls a:hover{
+	color:white;
+}
+
+#back-home{
+	right:0px;
+	top:0px;
+}
+
+#create-note{
+	left:50%;
+	margin-left:3cm;
+	bottom:1px;
+	margin-bottom:0;
+}
+
+#create-note button{
+	padding:0;
+	border:none;
+	background: none;
+}
+
+#position-label{
+	padding: 0.5em 1em;
+	right:0px;
+	top:1cm;
+	text-shadow: 0px -1px 2px #fff;
+}
+
+#position-label span{
+	display: block;
+	text-align: left;
+}
+
+#active-sandbox-label{
+	position: absolute;
+	left:50%;
+	top:0px;
+	width:2.5cm;
+	height:18px;
+	margin-left:-1.25cm;
+	z-index:2;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333;
+    background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 10px #333;
+	-webkit-box-shadow: 0 0 10px #333;
+}
+
+#active-sandbox-label span{
+	display: block;
+	padding-top:2px;
+	width:100%;
+}
+
