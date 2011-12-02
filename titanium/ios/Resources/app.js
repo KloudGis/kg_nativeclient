@@ -6,7 +6,7 @@ var window = Titanium.UI.createWindow({
     
 var webview = Titanium.UI.createWebView({url:'index.html'});
 window.add(webview);
-window.open({modal:false});   
+window.open({modal:true});   
    
 
 /*
