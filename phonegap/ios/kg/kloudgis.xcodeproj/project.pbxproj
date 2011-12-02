@@ -33,7 +33,7 @@
 		023832E314890CB700F2826C /* Capture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 023832E214890CB700F2826C /* Capture.bundle */; };
 		023832E514890CB700F2826C /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 023832E414890CB700F2826C /* PhoneGap.plist */; };
 		023832E914890CB700F2826C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 023832E814890CB700F2826C /* AppDelegate.m */; };
-		023832F214890CC800F2826C /* www in Resources */ = {isa = PBXBuildFile; fileRef = 023832F114890CC800F2826C /* www */; };
+		0251A86314898126003AA2D6 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 0251A86214898126003AA2D6 /* www */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,7 +68,7 @@
 		023832E714890CB700F2826C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Classes/AppDelegate.h; sourceTree = "<group>"; };
 		023832E814890CB700F2826C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Classes/AppDelegate.m; sourceTree = "<group>"; };
 		023832EB14890CB700F2826C /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
-		023832F114890CC800F2826C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
+		0251A86214898126003AA2D6 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +106,7 @@
 		0238329614890CB700F2826C = {
 			isa = PBXGroup;
 			children = (
-				023832F114890CC800F2826C /* www */,
+				0251A86214898126003AA2D6 /* www */,
 				023832C214890CB700F2826C /* kloudgis */,
 				023832A714890CB700F2826C /* Frameworks */,
 				023832A514890CB700F2826C /* Products */,
@@ -294,7 +294,7 @@
 				023832E114890CB700F2826C /* Default@2x.png in Resources */,
 				023832E314890CB700F2826C /* Capture.bundle in Resources */,
 				023832E514890CB700F2826C /* PhoneGap.plist in Resources */,
-				023832F214890CC800F2826C /* www in Resources */,
+				0251A86314898126003AA2D6 /* www in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +481,7 @@
 				023832F014890CB700F2826C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
