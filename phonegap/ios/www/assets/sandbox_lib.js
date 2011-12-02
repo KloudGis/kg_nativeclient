@@ -996,7 +996,7 @@ KG.core_leaflet = SC.Object.create({
             no_gwc: NO,
             kg_layer: layer.get('id'),
             kg_sandbox: KG.get('activeSandboxKey'),
-			auth_token: 'toto'
+			auth_token: KG.core_auth.get('authenticationToken')
         });
         layer._native_layer = wms;
         this.map.addLayer(wms);
@@ -3042,7 +3042,7 @@ KG.core_google = SC.Object.create({
         var search = this.get('searchValue');
         $.ajax({
             type: 'GET',
-            url: encodeURI('/mapshttp://localhost/api/geocode/json?address=%@&sensor=true'.fmt(search)),
+            url: encodeURI('/maps/api/geocode/json?address=%@&sensor=true'.fmt(search)),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             context: this,
